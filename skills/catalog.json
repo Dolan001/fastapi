@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "framework": "fastapi",
+  "skills": [
+    {
+      "name": "inspect-fastapi-target",
+      "inputs": ["PRD", "target repository inventory"],
+      "outputs": ["framework detection", "domain map", "compatibility risks"],
+      "required_checks": ["read-only discovery", "existing-work preservation"]
+    },
+    {
+      "name": "create-fastapi-monorepo-backend",
+      "inputs": ["validated task contract", "approved architecture", "rules/project-structure.json"],
+      "outputs": ["apps/backend production structure"],
+      "required_checks": ["path lease", "typed settings", "health check", "observability boundary"]
+    },
+    {
+      "name": "implement-fastapi-vertical-slice",
+      "inputs": ["requirement IDs", "OpenAPI boundary", "existing backend"],
+      "outputs": ["schema-to-route slice", "migration", "tests", "evidence"],
+      "required_checks": ["service boundary", "repository boundary", "transaction safety", "focused tests"]
+    },
+    {
+      "name": "verify-fastapi-delivery",
+      "inputs": ["changed files", "task contract", "test manifest"],
+      "outputs": ["independent verification decision"],
+      "required_checks": ["format", "lint", "strict types", "migration drift", "API tests", "security"]
+    }
+  ]
+}

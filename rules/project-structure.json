@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "framework": "fastapi",
+  "target_root": "apps/backend",
+  "required_paths": [
+    "pyproject.toml",
+    "requirements.lock",
+    "requirements-dev.lock",
+    "alembic.ini",
+    ".env.example",
+    "Dockerfile",
+    "README.md",
+    "app/main.py",
+    "app/api/dependencies.py",
+    "app/api/v1/router.py",
+    "app/api/v1/health.py",
+    "app/core/config.py",
+    "app/core/errors.py",
+    "app/core/logging.py",
+    "app/core/middleware.py",
+    "app/core/security.py",
+    "app/db/base.py",
+    "app/db/session.py",
+    "app/db/migrations/env.py",
+    "tests/conftest.py",
+    "scripts/validate_project.py"
+  ],
+  "domain_path_pattern": "app/domains/<domain>",
+  "required_domain_paths": [
+    "models.py",
+    "schemas.py",
+    "repository.py",
+    "service.py",
+    "routes.py",
+    "dependencies.py",
+    "tests/test_service.py",
+    "tests/test_api.py"
+  ],
+  "forbidden_patterns": [
+    "domain behavior in app/main.py",
+    "direct persistence in routes.py",
+    "untyped production configuration",
+    "destructive migration without approval",
+    "real secrets in environment files"
+  ]
+}
