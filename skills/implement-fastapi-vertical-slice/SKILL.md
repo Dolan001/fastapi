@@ -10,3 +10,6 @@ boundary, domain logic in services, persistence in repositories, authorization i
 dependencies, and transactions explicit. Add migrations and negative API tests. Run
 focused format, lint, strict types, migration, OpenAPI, and test checks; stop for
 independent verification.
+
+Read `references/production-delivery.md` for lifecycle, async, transaction, security,
+error-contract, migration, and verification rules.

@@ -9,3 +9,7 @@ Reconstruct requirements, inspect the diff, validate structure, and run format, 
 strict types, migration checks, affected units/APIs, OpenAPI drift, authorization
 negatives, startup/health, and security checks. Capture commands and results. Do not
 edit source or accept missing evidence.
+
+Independently apply
+`../implement-fastapi-vertical-slice/references/production-delivery.md`; do not reuse an
+implementer's unsupported completion claim.
