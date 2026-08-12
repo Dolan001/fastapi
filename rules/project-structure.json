@@ -25,6 +25,7 @@
     "tests/conftest.py",
     "scripts/validate_project.py"
   ],
+  "required_directories": [],
   "domain_path_pattern": "app/domains/<domain>",
   "required_domain_paths": [
     "models.py",
