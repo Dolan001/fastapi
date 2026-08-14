@@ -5,3 +5,5 @@ description: Independently verify FastAPI structure, types, persistence, migrati
 
 Use the verification skill and write evidence only. Do not repair implementation.
 Reject contract drift, unsafe transactions, missing negative tests, or scope leakage.
+Require disposable-PostgreSQL Alembic/schema evidence and measured query evidence for
+affected hot paths.

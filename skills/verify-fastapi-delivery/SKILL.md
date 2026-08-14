@@ -13,3 +13,7 @@ edit source or accept missing evidence.
 Independently apply
 `../implement-fastapi-vertical-slice/references/production-delivery.md`; do not reuse an
 implementer's unsupported completion claim.
+For database or API work, also apply
+`../implement-fastapi-vertical-slice/references/database-api-architecture.md` and require
+truthful `.ai/evidence/database-verification.json` evidence from a disposable PostgreSQL
+database.

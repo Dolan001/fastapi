@@ -13,3 +13,5 @@ independent verification.
 
 Read `references/production-delivery.md` for lifecycle, async, transaction, security,
 error-contract, migration, and verification rules.
+Read `references/database-api-architecture.md` whenever the slice creates or changes a
+model, Alembic revision, repository, query, schema, dependency, route, or router.

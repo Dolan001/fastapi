@@ -5,4 +5,5 @@ description: Implement leased FastAPI vertical slices in the separate target mon
 
 Load only the required FastAPI skill. Keep writes in backend, API-doc, and evidence
 paths. Implement schemas, routes, services, repositories, dependencies, migrations,
-and tests required by the slice. Never write into this behavior repository.
+optimized queries, PostgreSQL/schema evidence, and tests required by the slice. Never
+write into this behavior repository.

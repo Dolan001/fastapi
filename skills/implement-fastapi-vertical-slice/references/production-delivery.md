@@ -4,7 +4,7 @@ Load this reference only for FastAPI creation, implementation, or verification.
 
 ## Foundations and lifecycle
 
-- Pin compatible Python, FastAPI, Pydantic, ORM/driver, Alembic, server, test, and lint
+- Pin compatible Python, FastAPI, Pydantic, SQLAlchemy/PostgreSQL driver, Alembic, server, test, and lint
   versions in the target lock. Respect an existing sync or async architecture.
 - Validate settings at startup, separate public configuration from secrets, and never
   log credentials, tokens, request bodies containing secrets, or internal exceptions.
@@ -12,6 +12,8 @@ Load this reference only for FastAPI creation, implementation, or verification.
   do not construct database or HTTP clients per request.
 - Provide liveness and dependency-aware readiness, structured errors, request IDs,
   trusted proxy/host behavior, bounded body sizes, and explicit CORS.
+- Use PostgreSQL in every generated environment that validates persistence behavior;
+  never treat SQLite tests as production database evidence.
 
 ## Domain, async, and persistence
 
@@ -38,6 +40,8 @@ Load this reference only for FastAPI creation, implementation, or verification.
   throttling, enumeration resistance, CSRF/CORS, and webhook signature/replay handling.
 - Generate and validate OpenAPI from the app. Treat operation IDs and public schemas as
   versioned contracts consumed by the typed frontend client.
+- Compose stable domain routers beneath `/api/v1`; require explicit response models,
+  unique operation IDs, and contract-tested route ordering.
 
 ## Verification
 
