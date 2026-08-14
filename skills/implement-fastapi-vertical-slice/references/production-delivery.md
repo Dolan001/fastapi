@@ -15,6 +15,19 @@ Load this reference only for FastAPI creation, implementation, or verification.
 - Use PostgreSQL in every generated environment that validates persistence behavior;
   never treat SQLite tests as production database evidence.
 
+## Application composition and delivery surfaces
+
+- Keep the application factory or `main.py` declarative: create the app, register lifespan,
+  middleware, exception handlers, and composed version routers. Do not import domain models or
+  issue database statements there.
+- Build domain routers with local resource paths, then mount them through one version router.
+  Put fixed routes such as `/me`, `/search`, or `/token` before `/{resource_id}` and verify route
+  uniqueness. Do not repeat `/api/v1` inside every domain router.
+- Generate server-rendered templates, static mounts, or media routes only when the PRD requires
+  a FastAPI-owned web surface. Keep web and JSON adapters separate while reusing the same queries
+  and services. Never expose user uploads through an unrestricted development media mount in
+  production.
+
 ## Domain, async, and persistence
 
 - Routes translate HTTP; dependencies authenticate/authorize; services own business
@@ -42,6 +55,23 @@ Load this reference only for FastAPI creation, implementation, or verification.
   versioned contracts consumed by the typed frontend client.
 - Compose stable domain routers beneath `/api/v1`; require explicit response models,
   unique operation IDs, and contract-tested route ordering.
+- Derive actor, owner, tenant, and role from authenticated dependencies. Do not trust a client
+  supplied `user_id`, `owner_id`, or tenant identifier for authorization or ownership assignment.
+- Make authentication failures enumeration-resistant. Store passwords with a current adaptive
+  password hasher; store reset/API tokens only as hashes; require purpose, expiry, single use,
+  revocation, and safe key rotation. Keep public and private user response schemas separate.
+
+## External effects and files
+
+- Treat email, object storage, webhooks, queues, and image processing as adapters behind service
+  interfaces. Bound upload size while streaming, verify decoded content rather than only filename
+  or MIME type, generate server-side object keys, and enforce content/dimension policies.
+- Do not use in-process background tasks for work that must survive restart. Write a transactional
+  outbox/job record in the same database transaction, then deliver asynchronously with retry,
+  idempotency, observability, and dead-letter handling. Use in-process tasks only for explicitly
+  disposable work.
+- Define compensation for database/object-store split operations. Never leave a committed row
+  pointing to a missing object or delete the old object before the replacement is durable.
 
 ## Verification
 
@@ -51,5 +81,8 @@ Load this reference only for FastAPI creation, implementation, or verification.
   contract, dependency failure, concurrency/idempotency, security scan, and health.
 - Exercise success, malformed input, validation, conflict, not-found, unauthorized,
   forbidden, throttled, internal dependency failure, and cancellation where relevant.
+- Override dependencies—not global engine state—in API tests. Exercise ownership, route-order,
+  response-field filtering, upload validation, outbox retry/idempotency, and failure between
+  database commit and each required external effect.
 - Evidence contains exact argv, cwd, exit code, tool version, requirement IDs, and
   artifacts. Missing infrastructure or skipped required checks blocks verification.

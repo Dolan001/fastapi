@@ -28,6 +28,10 @@ apps/backend/
 │   │   ├── logging.py
 │   │   ├── middleware.py
 │   │   └── security.py
+│   ├── adapters/                 # only requirement-backed external systems
+│   │   ├── email.py
+│   │   ├── object_storage.py
+│   │   └── tasks.py
 │   ├── db/
 │   │   ├── base.py
 │   │   ├── engine.py
@@ -73,6 +77,8 @@ Ownership:
 - `app/main.py` assembles the application; it does not contain domain behavior.
 - `api` owns versioned routing and cross-domain HTTP dependencies.
 - `core` owns typed configuration, errors, logging, middleware, and security.
+- `adapters` is conditional and owns requirement-backed email, object storage, queue, or other
+  external-system clients; domain services depend on narrow interfaces rather than SDK details.
 - `db` owns PostgreSQL engine/pool policy, request sessions, readiness, named metadata,
   and Alembic infrastructure.
 - each `domains/<domain>` package owns schemas, persistence, services, routes,
@@ -82,6 +88,15 @@ Ownership:
   boundaries; routes only translate HTTP.
 - domain routers compose beneath `/api/v1` with stable prefixes, tags, response models,
   dependencies, and operation IDs.
+
+Conditional structure:
+
+- Omit `adapters/` entirely when the PRD has no external systems; add only the named adapters
+  required by reconciled requirements.
+- If FastAPI must also render HTML, add `app/web/<domain>/routes.py`, `templates/`, and `static/`.
+  Keep those web routes separate from `app/api/v1` and reuse domain queries/services.
+- If reliable deferred work is required, add an outbox/job domain, worker entrypoint, and retry/
+  idempotency tests. Do not substitute FastAPI in-process background tasks for durable delivery.
 
 Generation order:
 

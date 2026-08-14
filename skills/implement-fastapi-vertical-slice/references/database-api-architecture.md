@@ -26,6 +26,14 @@ service, schema, dependency, route, or router change.
   defaults, relationship cascade/passive-delete behavior, and foreign-key actions explicitly.
 - Express durable invariants with named PostgreSQL constraints. Python/Pydantic validation
   improves errors but never replaces database enforcement.
+- Normalize identities deliberately. For case-insensitive usernames, emails, slugs, or other
+  natural keys, pair canonical application input with a PostgreSQL functional unique index or
+  another explicitly chosen database representation. A preflight lookup improves the error but
+  never replaces catching the unique violation, rolling back the session, and mapping the named
+  constraint to a stable conflict code.
+- Prefer database-generated creation timestamps and deliberate update/version columns where
+  multiple writers exist. Keep ORM and database defaults consistent; never rely on an
+  application-only default for a value required by every writer.
 - Design indexes from observed filters, joins, ordering, uniqueness, and plans. Consider
   composite left-prefix order, partial/expression/covering indexes, GIN/GiST/BRIN, and
   PostgreSQL-specific data types only when requirements and measured workload justify them.
@@ -59,6 +67,9 @@ service, schema, dependency, route, or router change.
 - Select only required columns. Use `joinedload` for suitable scalar relations and
   `selectinload` for collections; forbid implicit lazy-loading in async response serialization.
   Use aggregates, bulk operations, and streaming/chunking only with measured semantics.
+- Use SQLAlchemy result APIs intentionally: `scalar_one_or_none()` when cardinality must be zero
+  or one, `scalars().unique().all()` when joined collection loading can duplicate entities, and
+  explicit ordering before every paginated result. Do not hide cardinality errors with `first()`.
 - Capture sanitized PostgreSQL `EXPLAIN` plans and query-count/round-trip budgets for affected
   hot paths. Add indexes only after plan evidence and include realistic data cardinality.
 
@@ -85,3 +96,7 @@ service, schema, dependency, route, or router change.
   filter/order limits, router composition, OpenAPI, and success plus negative API behavior.
 - Write `.ai/evidence/database-verification.json` without secrets. It must truthfully record
   connection, migration, schema, and query verification required by the workflow schema.
+- Run API tests through dependency overrides against PostgreSQL. A connection-scoped outer
+  transaction plus nested/savepoint sessions may isolate tests, but application commits must be
+  exercised. Keep a separate migration lane that builds the schema with Alembic from an empty
+  database; `metadata.create_all()` fixtures never count as migration evidence.
