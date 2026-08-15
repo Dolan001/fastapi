@@ -129,6 +129,19 @@
           "message": "The worker compose service must start a Celery worker process."
         }
       ]
+    },
+    {
+      "name": "realtime",
+      "trigger_globs": ["app/realtime/manager.py", "app/domains/*/websocket.py"],
+      "required_paths": ["app/realtime/__init__.py", "app/realtime/config.py", "app/realtime/events.py", "app/realtime/manager.py", "scripts/check_realtime.py", "compose.yaml"],
+      "required_directories": [],
+      "required_source_patterns": [
+        {"id": "websockets-dependency", "globs": ["pyproject.toml"], "pattern": "websockets", "ignore_case": true, "message": "FastAPI realtime requires the WebSockets runtime dependency."},
+        {"id": "redis-realtime-dependency", "globs": ["pyproject.toml"], "pattern": "redis(?:\\[hiredis\\])?", "ignore_case": true, "message": "Multi-process FastAPI realtime requires Redis."},
+        {"id": "redis-realtime-setting", "globs": ["app/realtime/config.py"], "pattern": "REALTIME_REDIS_URL", "ignore_case": false, "message": "FastAPI realtime configuration must bind the Redis URL."},
+        {"id": "redis-realtime-environment", "globs": [".env.example"], "pattern": "^REALTIME_REDIS_URL=redis", "ignore_case": false, "message": "The example environment must declare the realtime Redis URL."},
+        {"id": "redis-compose-service-realtime", "globs": ["compose.yaml", "compose.yml"], "pattern": "^\\s*redis:\\s*(?:#.*)?$", "ignore_case": false, "message": "Realtime compose must define Redis."}
+      ]
     }
   ],
   "domain_path_pattern": "app/domains/<domain>",
@@ -171,6 +184,17 @@
       "name": "background-tasks",
       "trigger_paths": ["tasks.py"],
       "required_paths": ["tasks.py", "outbox.py", "tests/test_tasks.py", "tests/test_outbox.py"],
+      "required_directories": []
+    },
+    {
+      "name": "realtime",
+      "trigger_paths": ["websocket.py"],
+      "required_paths": [
+        "websocket.py",
+        "events.py",
+        "tests/test_realtime.py",
+        "tests/test_realtime_auth.py"
+      ],
       "required_directories": []
     }
   ],

@@ -107,6 +107,9 @@ Conditional structure:
   for requirement-backed schedules and a result backend only when results are consumed.
 - FastAPI `BackgroundTasks` is permitted only for disposable, same-process work. It never satisfies
   a durable-work requirement.
+- Adding a domain WebSocket endpoint activates realtime. Require a lifespan-managed Redis manager,
+  versioned events, fresh per-command database sessions, domain auth/fan-out tests, a realtime health
+  check, and multi-worker Redis evidence. PostgreSQL and HTTP cursor resync remain authoritative.
 
 Generation order:
 

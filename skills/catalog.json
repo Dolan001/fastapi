@@ -6,6 +6,8 @@
     {"name": "inspect-fastapi-target", "path": "skills/inspect-fastapi-target/SKILL.md"},
     {"name": "create-fastapi-monorepo-backend", "path": "skills/create-fastapi-monorepo-backend/SKILL.md"},
     {"name": "implement-fastapi-vertical-slice", "path": "skills/implement-fastapi-vertical-slice/SKILL.md"},
+    {"name": "implement-fastapi-realtime", "path": "skills/implement-fastapi-realtime/SKILL.md"},
+    {"name": "implement-fastapi-background-work", "path": "skills/implement-fastapi-background-work/SKILL.md"},
     {"name": "verify-fastapi-delivery", "path": "skills/verify-fastapi-delivery/SKILL.md"}
   ]
 }
