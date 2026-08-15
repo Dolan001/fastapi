@@ -53,9 +53,11 @@ apps/backend/
 │           ├── models.py
 │           ├── service.py
 │           ├── tasks.py            # conditional: scalar-ID task entrypoints
+│           ├── outbox.py           # conditional: transactional delivery records
 │           └── tests/
 │               ├── test_service.py
-│               └── test_tasks.py
+│               ├── test_tasks.py
+│               └── test_outbox.py
 ├── tests/
 │   └── conftest.py
 └── scripts/
