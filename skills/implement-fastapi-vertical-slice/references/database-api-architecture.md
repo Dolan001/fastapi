@@ -96,7 +96,5 @@ service, schema, dependency, route, or router change.
   filter/order limits, router composition, OpenAPI, and success plus negative API behavior.
 - Write `.ai/evidence/database-verification.json` without secrets. It must truthfully record
   connection, migration, schema, and query verification required by the workflow schema.
-- Run API tests through dependency overrides against PostgreSQL. A connection-scoped outer
-  transaction plus nested/savepoint sessions may isolate tests, but application commits must be
-  exercised. Keep a separate migration lane that builds the schema with Alembic from an empty
-  database; `metadata.create_all()` fixtures never count as migration evidence.
+- Run API tests through PostgreSQL dependency overrides. Savepoints may isolate tests while
+  exercising commits; a separate empty-database Alembic lane proves migrations, never `create_all`.

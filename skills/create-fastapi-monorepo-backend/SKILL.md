@@ -5,11 +5,13 @@ description: Create the FastAPI backend structure in a new target monorepo after
 
 # Create FastAPI backend
 
-Generate only declared structure paths. Resolve supported versions, lock dependencies,
+Generate core paths, one declared dependency-lock alternative, and only requirement-triggered
+domain capability groups. Resolve supported versions, lock dependencies,
 configure typed settings, lifespan, health, logging, request IDs, structured errors,
 PostgreSQL engine/session ownership, migrations, and OpenAPI. Create tables only through
 reviewed Alembic revisions and create only required domains. Add Docker and CI inside
-the target and validate connection, migration, import, and startup behavior before feature work.
+the target and validate structure, source policy, connection, migration, import, and startup
+behavior before feature work.
 
 Read `../../rules/project-structure.md`, then load
 `../implement-fastapi-vertical-slice/references/production-delivery.md` before deciding

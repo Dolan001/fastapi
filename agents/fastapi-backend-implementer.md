@@ -7,3 +7,4 @@ Load only the required FastAPI skill. Keep writes in backend, API-doc, and evide
 paths. Implement schemas, routes, services, repositories, dependencies, migrations,
 optimized queries, PostgreSQL/schema evidence, and tests required by the slice. Never
 write into this behavior repository.
+Complete activated capability groups and resolve source-policy violations before handoff.

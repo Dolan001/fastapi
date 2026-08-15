@@ -1,17 +1,20 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "framework": "fastapi",
   "target_root": "apps/backend",
   "required_paths": [
     "pyproject.toml",
-    "requirements.lock",
-    "requirements-dev.lock",
     "alembic.ini",
     ".env.example",
+    ".gitignore",
+    ".dockerignore",
     "Dockerfile",
     "README.md",
+    "app/__init__.py",
     "app/main.py",
+    "app/api/__init__.py",
     "app/api/dependencies.py",
+    "app/api/v1/__init__.py",
     "app/api/v1/router.py",
     "app/api/v1/health.py",
     "app/core/config.py",
@@ -19,12 +22,17 @@
     "app/core/logging.py",
     "app/core/middleware.py",
     "app/core/security.py",
+    "app/core/__init__.py",
+    "app/db/__init__.py",
     "app/db/base.py",
     "app/db/engine.py",
     "app/db/session.py",
     "app/db/health.py",
     "app/db/naming.py",
+    "app/db/migrations/__init__.py",
     "app/db/migrations/env.py",
+    "app/db/migrations/versions",
+    "app/domains/__init__.py",
     "tests/conftest.py",
     "scripts/validate_project.py",
     "scripts/check_database.py",
@@ -32,37 +40,100 @@
     "scripts/check_query_plans.py",
     "scripts/check_openapi_drift.py"
   ],
-  "required_directories": [],
+  "required_directories": ["app/db/migrations/versions"],
+  "required_path_sets": [
+    {
+      "name": "dependency-lock",
+      "alternatives": [
+        ["uv.lock"],
+        ["poetry.lock"],
+        ["pdm.lock"],
+        ["requirements.lock", "requirements-dev.lock"]
+      ]
+    }
+  ],
   "domain_path_pattern": "app/domains/<domain>",
   "required_domain_paths": [
+    "__init__.py",
     "models.py",
-    "schemas/__init__.py",
-    "schemas/commands.py",
-    "schemas/views.py",
-    "repository.py",
-    "queries.py",
     "service.py",
-    "routes.py",
-    "dependencies.py",
-    "tests/test_service.py",
-    "tests/test_repository.py",
-    "tests/test_queries.py",
-    "tests/test_schemas.py",
-    "tests/test_api.py"
+    "tests/test_service.py"
   ],
-  "required_domain_directories": ["schemas", "tests"],
+  "required_domain_directories": ["tests"],
+  "conditional_domain_groups": [
+    {
+      "name": "persistence",
+      "trigger_paths": ["repository.py"],
+      "required_paths": ["repository.py", "tests/test_repository.py"],
+      "required_directories": []
+    },
+    {
+      "name": "optimized-reads",
+      "trigger_paths": ["queries.py"],
+      "required_paths": ["queries.py", "tests/test_queries.py"],
+      "required_directories": []
+    },
+    {
+      "name": "json-api",
+      "trigger_paths": ["routes.py", "dependencies.py", "schemas"],
+      "required_paths": [
+        "schemas",
+        "schemas/__init__.py",
+        "schemas/commands.py",
+        "schemas/views.py",
+        "routes.py",
+        "dependencies.py",
+        "tests/test_schemas.py",
+        "tests/test_api.py"
+      ],
+      "required_directories": ["schemas"]
+    }
+  ],
   "minimum_domain_instances": 1,
   "domain_excluded_paths": [],
-  "forbidden_patterns": [
-    "domain behavior in app/main.py",
-    "direct persistence in routes.py",
-    "commit inside repository.py or routes.py",
-    "database access from schemas/**",
-    "unbounded or client-controlled ordering",
-    "SQLite fallback in generated configuration",
-    "metadata create_all in application startup",
-    "untyped production configuration",
-    "destructive migration without approval",
-    "real secrets in environment files"
+  "source_rules": [
+    {
+      "id": "no-sqlite-runtime",
+      "globs": ["app/**/*.py", "alembic.ini"],
+      "pattern": "sqlite(?:\\+[a-z0-9_]+)?://|aiosqlite|\\.sqlite3?\\b",
+      "ignore_case": true,
+      "scan_strings": true,
+      "message": "FastAPI runtime and migrations must use PostgreSQL without a SQLite fallback."
+    },
+    {
+      "id": "main-does-not-own-domain-behavior",
+      "globs": ["app/main.py"],
+      "pattern": "(?:from\\s+app\\.domains|import\\s+app\\.domains|\\b(?:db|session)\\.(?:add|delete|execute|commit|rollback)\\s*\\()",
+      "ignore_case": false,
+      "message": "FastAPI main.py assembles infrastructure and version routers only."
+    },
+    {
+      "id": "no-runtime-create-all",
+      "globs": ["app/**/*.py"],
+      "pattern": "metadata\\.create_all\\s*\\(",
+      "ignore_case": false,
+      "message": "Application startup must not create tables; Alembic owns schema creation."
+    },
+    {
+      "id": "routes-do-not-persist",
+      "globs": ["app/domains/*/routes.py"],
+      "pattern": "\\b(?:db|session)\\.(?:add|add_all|delete|execute|scalar|scalars|flush|commit|rollback)\\s*\\(",
+      "ignore_case": false,
+      "message": "FastAPI routes translate HTTP and must delegate persistence."
+    },
+    {
+      "id": "repositories-do-not-commit",
+      "globs": ["app/domains/*/repository.py"],
+      "pattern": "\\b(?:db|session|self\\.session|self\\._session)\\.(?:commit|rollback)\\s*\\(",
+      "ignore_case": false,
+      "message": "FastAPI repositories never commit or roll back service-owned transactions."
+    },
+    {
+      "id": "schemas-do-not-access-database",
+      "globs": ["app/domains/*/schemas/*.py"],
+      "pattern": "(?:from\\s+sqlalchemy|import\\s+sqlalchemy|\\bAsyncSession\\b|\\bSession\\b)",
+      "ignore_case": false,
+      "message": "Pydantic transport schemas must not import or access database sessions."
+    }
   ]
 }

@@ -6,8 +6,7 @@ derived from reconciled requirements.
 ```text
 apps/backend/
 ├── pyproject.toml
-├── requirements.lock
-├── requirements-dev.lock
+├── <resolved dependency lock>
 ├── alembic.ini
 ├── .env.example
 ├── .gitignore
@@ -18,52 +17,40 @@ apps/backend/
 │   ├── __init__.py
 │   ├── main.py
 │   ├── api/
+│   │   ├── __init__.py
 │   │   ├── dependencies.py
 │   │   └── v1/
+│   │       ├── __init__.py
 │   │       ├── router.py
 │   │       └── health.py
 │   ├── core/
+│   │   ├── __init__.py
 │   │   ├── config.py
 │   │   ├── errors.py
 │   │   ├── logging.py
 │   │   ├── middleware.py
 │   │   └── security.py
-│   ├── adapters/                 # only requirement-backed external systems
-│   │   ├── email.py
-│   │   ├── object_storage.py
-│   │   └── tasks.py
 │   ├── db/
+│   │   ├── __init__.py
 │   │   ├── base.py
 │   │   ├── engine.py
 │   │   ├── session.py
 │   │   ├── health.py
 │   │   ├── naming.py
 │   │   └── migrations/
+│   │       ├── __init__.py
 │   │       ├── env.py
 │   │       └── versions/
 │   └── domains/
+│       ├── __init__.py
 │       └── <domain>/
+│           ├── __init__.py
 │           ├── models.py
-│           ├── schemas/
-│           │   ├── __init__.py
-│           │   ├── commands.py
-│           │   └── views.py
-│           ├── repository.py
-│           ├── queries.py
 │           ├── service.py
-│           ├── routes.py
-│           ├── dependencies.py
 │           └── tests/
-│               ├── factories.py
-│               ├── test_service.py
-│               ├── test_repository.py
-│               ├── test_queries.py
-│               ├── test_schemas.py
-│               └── test_api.py
+│               └── test_service.py
 ├── tests/
-│   ├── conftest.py
-│   ├── contract/
-│   └── integration/
+│   └── conftest.py
 └── scripts/
     ├── validate_project.py
     ├── check_database.py
@@ -77,8 +64,6 @@ Ownership:
 - `app/main.py` assembles the application; it does not contain domain behavior.
 - `api` owns versioned routing and cross-domain HTTP dependencies.
 - `core` owns typed configuration, errors, logging, middleware, and security.
-- `adapters` is conditional and owns requirement-backed email, object storage, queue, or other
-  external-system clients; domain services depend on narrow interfaces rather than SDK details.
 - `db` owns PostgreSQL engine/pool policy, request sessions, readiness, named metadata,
   and Alembic infrastructure.
 - each `domains/<domain>` package owns schemas, persistence, services, routes,
@@ -91,8 +76,19 @@ Ownership:
 
 Conditional structure:
 
-- Omit `adapters/` entirely when the PRD has no external systems; add only the named adapters
-  required by reconciled requirements.
+- Resolve exactly one lock strategy: `uv.lock`, `poetry.lock`, `pdm.lock`, or the pair
+  `requirements.lock` plus `requirements-dev.lock`.
+- Every domain requires only `__init__.py`, its models, service, and service tests.
+- Adding `repository.py` activates persistence and requires repository tests; adding `queries.py`
+  activates optimized reads and requires query tests.
+- Adding routes, dependencies, or schemas activates the JSON API group and requires command/view
+  schemas plus schema/API tests.
+- Add factories only where they reduce test duplication.
+- Add root contract and integration suites when cross-domain or infrastructure behavior requires
+  them; keep focused tests with their owning domain.
+- When external systems are required, add only the relevant files below `app/adapters/`, such as
+  `email.py`, `object_storage.py`, or `tasks.py`. Domain services depend on narrow interfaces rather
+  than SDK details. Omit the directory when the PRD has no external systems.
 - If FastAPI must also render HTML, add `app/web/<domain>/routes.py`, `templates/`, and `static/`.
   Keep those web routes separate from `app/api/v1` and reuse domain queries/services.
 - If reliable deferred work is required, add an outbox/job domain, worker entrypoint, and retry/
@@ -104,7 +100,7 @@ Generation order:
 2. Create typed fail-closed configuration, PostgreSQL engine/session/readiness,
    application assembly, logging, and dependency locks.
 3. Create named metadata and Alembic foundations without application `create_all`.
-4. Generate only requirement-backed domains.
+4. Generate only requirement-backed domains and conditional capability groups.
 5. Implement one constrained/indexed model-to-route slice with service, repository,
    query, schema, transaction, and API tests.
 6. Generate and review Alembic revisions; prove an empty PostgreSQL database reaches head.

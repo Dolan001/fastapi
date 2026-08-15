@@ -6,3 +6,5 @@ application scaffold.
 Generated backends use PostgreSQL, SQLAlchemy 2, Alembic-owned schema,
 service/repository/query boundaries, explicit Pydantic schemas, thin versioned routers,
 and measured query checks.
+The executable structure contract supports dependency-lock alternatives, requirement-triggered
+domain capabilities, and source-policy checks without storing application templates.

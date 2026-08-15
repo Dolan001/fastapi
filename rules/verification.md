@@ -9,3 +9,5 @@ indexes, and measured plans or query budgets for affected hot paths.
 For affected features, also require race-safe conflict handling, authenticated ownership,
 static-before-dynamic route behavior, response-field filtering, and durable external-effect
 failure tests. Generate only the checks relevant to requirements; missing required checks block.
+The structure gate must also report no source-rule violations and no incomplete conditional
+capability groups.
