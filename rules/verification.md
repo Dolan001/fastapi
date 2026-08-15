@@ -11,3 +11,5 @@ static-before-dynamic route behavior, response-field filtering, and durable exte
 failure tests. Generate only the checks relevant to requirements; missing required checks block.
 The structure gate must also report no source-rule violations and no incomplete conditional
 capability groups.
+When background tasks are active, Redis broker, Celery worker startup, enqueue/consume, retry,
+idempotency, duplicate-delivery, outbox, terminal-failure, and optional schedule evidence are required.

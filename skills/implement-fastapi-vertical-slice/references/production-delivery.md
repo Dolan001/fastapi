@@ -70,6 +70,14 @@ Load this reference only for FastAPI creation, implementation, or verification.
   outbox/job record in the same database transaction, then deliver asynchronously with retry,
   idempotency, observability, and dead-letter handling. Use in-process tasks only for explicitly
   disposable work.
+- Use Celery with Redis as the default durable worker. Async functions improve request concurrency;
+  they do not provide durable queuing, retry, or execution after process failure. Add Celery Beat
+  only for requirement-backed schedules and a result backend only when application behavior reads
+  task results.
+- Task messages contain versioned scalar IDs, never SQLAlchemy sessions/models, request objects,
+  secrets, or large files. Each task opens its own session, checks an idempotency key, uses bounded
+  exponential retry with jitter, records terminal failures, and defines time limits and queue
+  routing. Worker readiness proves Redis connectivity and enqueue-to-consume behavior.
 - Define compensation for database/object-store split operations. Never leave a committed row
   pointing to a missing object or delete the old object before the replacement is durable.
 
@@ -84,5 +92,7 @@ Load this reference only for FastAPI creation, implementation, or verification.
 - Override dependencies—not global engine state—in API tests. Exercise ownership, route-order,
   response-field filtering, upload validation, outbox retry/idempotency, and failure between
   database commit and each required external effect.
+- When background work is active, also prove worker startup, duplicate delivery, retry exhaustion,
+  terminal failure visibility, graceful shutdown, and scheduled dispatch when configured.
 - Evidence contains exact argv, cwd, exit code, tool version, requirement IDs, and
   artifacts. Missing infrastructure or skipped required checks blocks verification.

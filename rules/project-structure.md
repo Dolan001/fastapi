@@ -12,6 +12,7 @@ apps/backend/
 ├── .gitignore
 ├── .dockerignore
 ├── Dockerfile
+├── compose.yaml                    # conditional: Redis + Celery worker
 ├── README.md
 ├── app/
 │   ├── __init__.py
@@ -41,14 +42,20 @@ apps/backend/
 │   │       ├── __init__.py
 │   │       ├── env.py
 │   │       └── versions/
+│   ├── worker/                     # conditional: durable background work
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   └── celery_app.py
 │   └── domains/
 │       ├── __init__.py
 │       └── <domain>/
 │           ├── __init__.py
 │           ├── models.py
 │           ├── service.py
+│           ├── tasks.py            # conditional: scalar-ID task entrypoints
 │           └── tests/
-│               └── test_service.py
+│               ├── test_service.py
+│               └── test_tasks.py
 ├── tests/
 │   └── conftest.py
 └── scripts/
@@ -56,7 +63,8 @@ apps/backend/
     ├── check_database.py
     ├── check_migration_plan.py
     ├── check_query_plans.py
-    └── check_openapi_drift.py
+    ├── check_openapi_drift.py
+    └── check_workers.py            # conditional
 ```
 
 Ownership:
@@ -91,8 +99,12 @@ Conditional structure:
   than SDK details. Omit the directory when the PRD has no external systems.
 - If FastAPI must also render HTML, add `app/web/<domain>/routes.py`, `templates/`, and `static/`.
   Keep those web routes separate from `app/api/v1` and reuse domain queries/services.
-- If reliable deferred work is required, add an outbox/job domain, worker entrypoint, and retry/
-  idempotency tests. Do not substitute FastAPI in-process background tasks for durable delivery.
+- Adding a domain `tasks.py` activates the background-task group. It requires Celery with the Redis
+  extra, typed worker configuration, explicit domain task discovery, a Redis broker URL, worker
+  health check, Redis and worker compose services, and retry/idempotency tests. Add Celery Beat only
+  for requirement-backed schedules and a result backend only when results are consumed.
+- FastAPI `BackgroundTasks` is permitted only for disposable, same-process work. It never satisfies
+  a durable-work requirement.
 
 Generation order:
 
@@ -103,5 +115,7 @@ Generation order:
 4. Generate only requirement-backed domains and conditional capability groups.
 5. Implement one constrained/indexed model-to-route slice with service, repository,
    query, schema, transaction, and API tests.
-6. Generate and review Alembic revisions; prove an empty PostgreSQL database reaches head.
-7. Add query budgets/plans, database evidence, Docker, and CI after checks are deterministic.
+6. For durable deferred effects, persist an outbox/job inside the business transaction, then add
+   idempotent Celery delivery, bounded retries, failure records, and worker evidence.
+7. Generate and review Alembic revisions; prove an empty PostgreSQL database reaches head.
+8. Add query budgets/plans, database evidence, Docker, and CI after checks are deterministic.

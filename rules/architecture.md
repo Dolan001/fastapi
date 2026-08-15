@@ -9,3 +9,6 @@
   schema; query modules own reads; services own transactions; schemas are side-effect free.
 - Compose domain routers below `/api/v1` with stable prefixes, tags, and operation IDs.
 - Treat OpenAPI as the client/backend integration boundary.
+- Use Celery with Redis for durable deferred work; async request handlers do not replace a worker.
+  Commit a PostgreSQL outbox/job with business state, pass scalar identifiers to tasks, open a new
+  session inside the task, and make duplicate delivery safe.
