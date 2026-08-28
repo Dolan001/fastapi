@@ -14,6 +14,10 @@ Load this reference only for FastAPI creation, implementation, or verification.
   trusted proxy/host behavior, bounded body sizes, and explicit CORS.
 - Use PostgreSQL in every generated environment that validates persistence behavior;
   never treat SQLite tests as production database evidence.
+- Resolve a currently supported minimal Python base, pin the verified release image by
+  digest, use separate build/runtime stages and a non-root runtime user, and keep build
+  tools out of the final image. Rebuild without stale cache and scan the resulting
+  digest; a fixable critical OS or application vulnerability blocks acceptance.
 
 ## Application composition and delivery surfaces
 

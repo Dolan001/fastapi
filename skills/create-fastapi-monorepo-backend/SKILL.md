@@ -13,6 +13,11 @@ reviewed Alembic revisions and create only required domains. Add Docker and CI i
 the target and validate structure, source policy, connection, migration, import, and startup
 behavior before feature work.
 
+Use a currently supported minimal Python base image, pin the verified runtime image by
+digest, run as a non-root user, and keep build and runtime stages separate. Re-resolve
+the base digest instead of copying a permanent example digest. Build without stale
+cache for release verification and block acceptance on fixable critical image findings.
+
 Read `../../rules/project-structure.md`, then load
 `../implement-fastapi-vertical-slice/references/production-delivery.md` before deciding
 async, transaction, authentication, migration, or deployment behavior.
