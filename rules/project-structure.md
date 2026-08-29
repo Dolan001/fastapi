@@ -52,6 +52,13 @@ apps/backend/
 │           ├── __init__.py
 │           ├── models.py
 │           ├── service.py
+│           ├── schemas/             # conditional; resource/use-case modules
+│           │   ├── __init__.py
+│           │   └── users.py         # illustrative, never commands.py/views.py
+│           ├── routes/              # conditional; thin resource/use-case routers
+│           │   ├── __init__.py
+│           │   └── users.py
+│           ├── dependencies.py      # conditional authorization/context
 │           ├── tasks.py            # conditional: scalar-ID task entrypoints
 │           ├── outbox.py           # conditional: transactional delivery records
 │           └── tests/
@@ -84,6 +91,21 @@ Ownership:
 - domain routers compose beneath `/api/v1` with stable prefixes, tags, response models,
   dependencies, and operation IDs.
 
+Naming and growth rules:
+
+- Build a PRD-to-domain map from entities, capabilities, journeys, and API nouns. Preserve a clear
+  PRD bounded-context term. If the PRD describes a capability without naming it, use familiar names
+  such as `accounts`, `authentication`, `users`, `notifications`, `articles`, `blog`, `tasks`,
+  `webhooks`, or `chat`.
+- Do not invent `identity`, `work`, `operations`, `data`, `management`, or `collaboration` domains
+  unless that exact product term is intentional in the PRD. Never use `sample`, `misc`, or `app`.
+- Name schema and route modules by resource or use case, such as `schemas/users.py`,
+  `schemas/authentication.py`, and `routes/users.py`. Use Pydantic class names such as `UserCreate`
+  and `UserRead`; generic `commands.py`, `views.py`, `input.py`, and `output.py` are forbidden.
+- Keep cohesive domain files at most 300 lines. Split models, services, repositories, queries,
+  dependencies, tasks, WebSockets, schemas, routes, and tests by responsibility before growth makes
+  ownership unclear. Preserve router composition, public operation IDs, imports, and tests.
+
 Conditional structure:
 
 - Resolve exactly one lock strategy: `uv.lock`, `poetry.lock`, `pdm.lock`, or the pair
@@ -91,8 +113,8 @@ Conditional structure:
 - Every domain requires only `__init__.py`, its models, service, and service tests.
 - Adding `repository.py` activates persistence and requires repository tests; adding `queries.py`
   activates optimized reads and requires query tests.
-- Adding routes, dependencies, or schemas activates the JSON API group and requires command/view
-  schemas plus schema/API tests.
+- Adding routes, dependencies, or schemas activates the JSON API group and requires resource/use-case
+  schema and route packages plus schema/API tests.
 - Add factories only where they reduce test duplication.
 - Add root contract and integration suites when cross-domain or infrastructure behavior requires
   them; keep focused tests with their owning domain.
@@ -117,7 +139,7 @@ Generation order:
 2. Create typed fail-closed configuration, PostgreSQL engine/session/readiness,
    application assembly, logging, and dependency locks.
 3. Create named metadata and Alembic foundations without application `create_all`.
-4. Generate only requirement-backed domains and conditional capability groups.
+4. Produce the PRD-to-domain map, then generate only requirement-backed domains and groups.
 5. Implement one constrained/indexed model-to-route slice with service, repository,
    query, schema, transaction, and API tests.
 6. For durable deferred effects, persist an outbox/job inside the business transaction, then add

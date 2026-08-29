@@ -9,6 +9,8 @@ Reconstruct requirements, inspect the diff, validate structure, and run format, 
 strict types, migration checks, affected units/APIs, OpenAPI drift, authorization
 negatives, startup/health, and security checks. Capture commands and results. Do not
 edit source or accept missing evidence.
+Independently validate domain names against the PRD/fallback policy, schema and route package
+filenames, cohesive ownership, and the 300-line split limit.
 
 Reuse a passing shared full-matrix report only when its revision and workspace inputs
 still match. For an individual feature, run only focused changed-slice checks; never

@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "framework": "fastapi",
   "target_root": "apps/backend",
   "required_paths": [
@@ -145,6 +145,19 @@
     }
   ],
   "domain_path_pattern": "app/domains/<domain>",
+  "module_path_pattern": "app/domains/<module>",
+  "module_naming": {
+    "style": "snake_case",
+    "ambiguous_names": ["identity", "work", "operations", "data", "management", "collaboration"],
+    "familiar_fallback_names": ["accounts", "authentication", "users", "notifications", "articles", "blog", "posts", "tasks", "todos", "webhooks", "chat", "files", "attachments", "payments", "orders", "products", "reports"],
+    "responsibility_packages": [
+      {"path": "schemas", "trigger_paths": ["schemas"], "minimum_modules": 1, "forbidden_module_names": ["commands.py", "views.py", "input.py", "output.py", "schemas.py"], "extensions": [".py"]},
+      {"path": "routes", "trigger_paths": ["routes", "dependencies.py", "schemas"], "minimum_modules": 1, "forbidden_module_names": ["routes.py"], "extensions": [".py"]}
+    ],
+    "max_lines": [
+      {"globs": ["models.py", "service.py", "repository.py", "queries.py", "dependencies.py", "tasks.py", "websocket.py", "schemas/*.py", "routes/*.py"], "maximum": 300}
+    ]
+  },
   "required_domain_paths": [
     "__init__.py",
     "models.py",
@@ -167,18 +180,17 @@
     },
     {
       "name": "json-api",
-      "trigger_paths": ["routes.py", "dependencies.py", "schemas"],
+      "trigger_paths": ["routes", "dependencies.py", "schemas"],
       "required_paths": [
         "schemas",
         "schemas/__init__.py",
-        "schemas/commands.py",
-        "schemas/views.py",
-        "routes.py",
+        "routes",
+        "routes/__init__.py",
         "dependencies.py",
         "tests/test_schemas.py",
         "tests/test_api.py"
       ],
-      "required_directories": ["schemas"]
+      "required_directories": ["schemas", "routes"]
     },
     {
       "name": "background-tasks",
@@ -225,7 +237,7 @@
     },
     {
       "id": "routes-do-not-persist",
-      "globs": ["app/domains/*/routes.py"],
+      "globs": ["app/domains/*/routes/*.py"],
       "pattern": "\\b(?:db|session)\\.(?:add|add_all|delete|execute|scalar|scalars|flush|commit|rollback)\\s*\\(",
       "ignore_case": false,
       "message": "FastAPI routes translate HTTP and must delegate persistence."

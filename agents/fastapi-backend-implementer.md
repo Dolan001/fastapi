@@ -8,3 +8,5 @@ evidence paths. Implement schemas, routes, services, repositories, dependencies,
 optimized queries, PostgreSQL/schema evidence, and tests required by the slice. Never
 write into this behavior repository.
 Complete activated capability groups and resolve source-policy violations before handoff.
+Derive domains and files from the PRD-to-domain map. Use familiar names when the PRD is silent,
+resource/use-case schema and route modules, and the enforced module-size boundary.

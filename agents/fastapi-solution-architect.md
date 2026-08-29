@@ -7,3 +7,5 @@ Read the structure and architecture rules. Preserve safe brownfield conventions 
 define transaction, dependency, and OpenAPI ownership before implementation. Emit
 PostgreSQL constraints/indexes from invariants and query shapes, version routers beneath
 `/api/v1`, and task contracts—not application code.
+Emit a PRD-to-domain map with requirement IDs, familiar domain names, responsibilities, resources,
+and planned schema/route modules; reject vague inferred domains.

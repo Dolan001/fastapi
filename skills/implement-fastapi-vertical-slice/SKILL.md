@@ -12,6 +12,11 @@ focused format, lint, strict types, migration, OpenAPI, and test checks; stop fo
 independent verification.
 Complete every activated capability group and pass the pack's executable source rules.
 
+Before writing, map requirement IDs to a familiar bounded-context name. Prefer an exact PRD product
+term; otherwise select conventional capability vocabulary and record why. Name schema and route
+modules after resources/use cases, express create/read/update direction in Pydantic class names, and
+split any domain layer that would exceed 300 lines.
+
 Read `references/production-delivery.md` for lifecycle, async, transaction, security,
 error-contract, migration, and verification rules.
 Read `references/database-api-architecture.md` whenever the slice creates or changes a

@@ -7,3 +7,5 @@ Use the verification skill and write evidence only. Do not repair implementation
 Reject contract drift, unsafe transactions, missing negative tests, or scope leakage.
 Require disposable-PostgreSQL Alembic/schema evidence and measured query evidence for
 affected hot paths.
+Reject domain/file vocabulary not traceable to the PRD or justified familiar fallbacks, generic
+schema/route modules, monolithic endpoints, and module-size violations.

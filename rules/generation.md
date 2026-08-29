@@ -10,3 +10,7 @@
 - Require PostgreSQL connection/pool/timeouts/readiness and derive named constraints and
   indexes from measured query shapes rather than speculation.
 - Pass the executable source rules and complete every activated domain capability group.
+- Resolve domain names from PRD product nouns first; when unnamed, choose familiar capability
+  vocabulary instead of generic architecture labels.
+- Use resource/use-case schema and route packages, not generic direction/layer filenames, and split
+  cohesive modules at the contract's 300-line boundary.

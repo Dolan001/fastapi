@@ -12,6 +12,8 @@ PostgreSQL engine/session ownership, migrations, and OpenAPI. Create tables only
 reviewed Alembic revisions and create only required domains. Add Docker and CI inside
 the target and validate structure, source policy, connection, migration, import, and startup
 behavior before feature work.
+First emit the PRD-to-domain map. Use explicit PRD nouns or justified familiar capability names,
+then scaffold resource/use-case schema and route packages—never generic direction/layer files.
 
 Use a currently supported minimal Python base image, pin the verified runtime image by
 digest, run as a non-root user, and keep build and runtime stages separate. Re-resolve
