@@ -95,12 +95,12 @@ Naming and growth rules:
 
 - Build a PRD-to-domain map from entities, capabilities, journeys, and API nouns. Preserve a clear
   PRD bounded-context term. If the PRD describes a capability without naming it, use familiar names
-  such as `accounts`, `authentication`, `users`, `notifications`, `articles`, `blog`, `tasks`,
+  such as `accounts`, `authentications`, `users`, `notifications`, `articles`, `blog`, `tasks`,
   `webhooks`, or `chat`.
 - Do not invent `identity`, `work`, `operations`, `data`, `management`, or `collaboration` domains
   unless that exact product term is intentional in the PRD. Never use `sample`, `misc`, or `app`.
 - Name schema and route modules by resource or use case, such as `schemas/users.py`,
-  `schemas/authentication.py`, and `routes/users.py`. Use Pydantic class names such as `UserCreate`
+  `schemas/authentications.py`, and `routes/users.py`. Use Pydantic class names such as `UserCreate`
   and `UserRead`; generic `commands.py`, `views.py`, `input.py`, and `output.py` are forbidden.
 - Keep cohesive domain files at most 300 lines. Split models, services, repositories, queries,
   dependencies, tasks, WebSockets, schemas, routes, and tests by responsibility before growth makes

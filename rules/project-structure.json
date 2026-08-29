@@ -149,7 +149,7 @@
   "module_naming": {
     "style": "snake_case",
     "ambiguous_names": ["identity", "work", "operations", "data", "management", "collaboration"],
-    "familiar_fallback_names": ["accounts", "authentication", "users", "notifications", "articles", "blog", "posts", "tasks", "todos", "webhooks", "chat", "files", "attachments", "payments", "orders", "products", "reports"],
+    "familiar_fallback_names": ["accounts", "authentications", "users", "notifications", "articles", "blog", "posts", "tasks", "todos", "webhooks", "chat", "files", "attachments", "payments", "orders", "products", "reports"],
     "responsibility_packages": [
       {"path": "schemas", "trigger_paths": ["schemas"], "minimum_modules": 1, "forbidden_module_names": ["commands.py", "views.py", "input.py", "output.py", "schemas.py"], "extensions": [".py"]},
       {"path": "routes", "trigger_paths": ["routes", "dependencies.py", "schemas"], "minimum_modules": 1, "forbidden_module_names": ["routes.py"], "extensions": [".py"]}
