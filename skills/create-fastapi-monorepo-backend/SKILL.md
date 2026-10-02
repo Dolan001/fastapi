@@ -12,6 +12,10 @@ PostgreSQL engine/session ownership, migrations, and OpenAPI. Create tables only
 reviewed Alembic revisions and create only required domains. Add Docker and CI inside
 the target and validate structure, source policy, connection, migration, import, and startup
 behavior before feature work.
+Docker Compose is the only runtime provider for PostgreSQL and any requirement-backed Redis,
+Celery worker, or Celery Beat service. Do not inspect, install, or use host daemons. Pull missing
+pinned database/broker images through Compose; build workers and Beat from the locked backend image.
+Generate a normalized unique Compose project name and distinct purpose-specific database names.
 First emit the PRD-to-domain map. Use explicit PRD nouns or justified familiar capability names,
 then scaffold resource/use-case schema and route packages—never generic direction/layer files.
 

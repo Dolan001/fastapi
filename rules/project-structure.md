@@ -127,6 +127,8 @@ Conditional structure:
   extra, typed worker configuration, explicit domain task discovery, a Redis broker URL, worker
   health check, Redis and worker compose services, and retry/idempotency tests. Add Celery Beat only
   for requirement-backed schedules and a result backend only when results are consumed.
+- Run Redis only as a version-pinned Compose service. Run Celery worker and Beat as separate Compose
+  services built from the same locked backend image. Never install or use host Redis or global Celery.
 - FastAPI `BackgroundTasks` is permitted only for disposable, same-process work. It never satisfies
   a durable-work requirement.
 - Adding a domain WebSocket endpoint activates realtime. Require a lifespan-managed Redis manager,
